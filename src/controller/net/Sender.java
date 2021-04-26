@@ -157,7 +157,7 @@ public class Sender extends Thread {
             }
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 interrupt();
             }
