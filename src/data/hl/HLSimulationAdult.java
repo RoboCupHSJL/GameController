@@ -14,8 +14,8 @@ public class HLSimulationAdult extends HLSim
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_sim_adult";
         /** How many robots are in a team. */
-        teamSize = 2;
+        teamSize = 3;
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 2;
+        robotsPlaying = 3;
     }
 }
