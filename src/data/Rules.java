@@ -15,11 +15,12 @@ public abstract class Rules
 {   
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
-        new HL(),
-        new HLTeen(),
-        new HLAdult(),
-        new HLSimulationKid(),
-        new HLSimulationAdult()
+        new HL(), //0
+        new HLTeen(), //1
+        new HLAdult(), //2
+        new HLSimulationKid(), //3
+        new HLSimulationAdult(), //4
+        new HLSimulationJunior() //5
     };
 
     public boolean equals(Rules rules) {
