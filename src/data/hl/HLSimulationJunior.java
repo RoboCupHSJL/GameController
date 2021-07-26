@@ -14,10 +14,10 @@ public class HLSimulationJunior extends HLSim
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_sim_junior";
         /** How many robots are in a team. */
-        teamSize = 3;
+        teamSize = 2;
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 3;
+        robotsPlaying = 2;
         /** Time in seconds one half is long. */
-        halfTime = 3*60;        
+        halfTime = 5*60;        
     }
 }
