@@ -19,5 +19,16 @@ public class HLSimulationJunior extends HLSim
         robotsPlaying = 2;
         /** Time in seconds one half is long. */
         halfTime = 5*60;        
+        
+        /** Time in seconds before a global game stuck can be called. */
+        minDurationBeforeStuck = 60;
+        /** Time in seconds one overtime half is long. */
+        /** SHOULDN'T IT BE CHANGED TO MATCH REGULAR HALF DURATION? */
+        overtimeTime = 3*60;
+
+        /** Time in seconds the ready state is long. */
+        /** readyTime = 45; */
+        /** How long the referee timeout is **/
+        /** refereeTimeout = 10*60; */
     }
 }
