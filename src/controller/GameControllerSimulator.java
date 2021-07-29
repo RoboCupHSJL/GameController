@@ -16,6 +16,7 @@ import data.*;
 import data.communication.GameControlData;
 import data.hl.HLSimulationAdult;
 import data.hl.HLSimulationKid;
+import data.hl.HLSimulationJunior;
 import data.states.AdvancedData;
 import data.states.GamePreparationData;
 import data.teams.TeamLoadInfo;
@@ -313,6 +314,10 @@ public class GameControllerSimulator {
             gpd.switchRules(new HLSimulationAdult());
             Rules.league = Rules.LEAGUES[4];
         }
+        if (size_class.equals("JUNIOR")) {
+            gpd.switchRules(new HLSimulationJunior());
+            Rules.league = Rules.LEAGUES[5]; //This magic number is the index of the needed league in data/Rules.java LEAGUES array
+        }        
         if (half_time_length > 0) {
             Rules.league.halfTime = half_time_length;
         }
