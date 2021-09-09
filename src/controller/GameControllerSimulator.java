@@ -95,6 +95,8 @@ public class GameControllerSimulator {
     private static final String COMMAND_OVERTIME = "--overtimeduration";
     private static final String COMMAND_MINIMIZED_SHORT = "-m";
     private static final String COMMAND_MINIMIZED = "--minimized";
+    private static final String COMMAND_USE_LOOPBACK_SHORT = "-u";
+    private static final String COMMAND_USE_LOOPBACK = "--useloopback";    
 
     /** Dynamically settable path to the config root folder */
     private static final String CONFIG_ROOT = System.getProperty("CONFIG_ROOT", "");
@@ -125,6 +127,7 @@ public class GameControllerSimulator {
         boolean testMode = false;
         boolean fastMode = false;
         boolean minimized = false;
+        boolean use_loopback = false;
 
         parsing:
         for (int i = 0; i < args.length; i++) {
@@ -171,12 +174,14 @@ public class GameControllerSimulator {
             } else if (args[i].equals(COMMAND_HALFTIME) || args[i].equals(COMMAND_HALFTIME_SHORT)) {
                 half_time_length = Integer.parseInt(args[++i]);
                 continue parsing;
-            }
-            else if (args[i].equals(COMMAND_OVERTIME) || args[i].equals(COMMAND_OVERTIME_SHORT)) {
+            } else if (args[i].equals(COMMAND_OVERTIME) || args[i].equals(COMMAND_OVERTIME_SHORT)) {
                 over_time_length = Integer.parseInt(args[++i]);
                 continue parsing;
-            }
-            String leagues = "";
+            } else if (args[i].equals(COMMAND_USE_LOOPBACK_SHORT) || args[i].equals(COMMAND_USE_LOOPBACK)) {
+                use_loopback = true;
+                continue parsing;
+            }             
+                String leagues = "";
             for (Rules rules : Rules.LEAGUES) {
                 leagues += (leagues.equals("") ? "" : " | ") + rules.leagueDirectory;
             }
@@ -218,18 +223,37 @@ public class GameControllerSimulator {
                 if (interfaceName.isEmpty()) {
                     while (nifs.hasMoreElements()) {
                         NetworkInterface nif = nifs.nextElement();
-                        if (!nif.isUp() || nif.isLoopback()) {
-                            continue;
-                        }
-                        for (InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
-                            if (ifAddress.getAddress().isLoopbackAddress()) {
-                                // ignore loopback during automatic interface lookup
+                        if (use_loopback) {
+                            if (!nif.isUp()) {
                                 continue;
-                            } else if (ifAddress.getAddress() instanceof Inet4Address) {
-                                networkInterface = nif;
-                                localAddress = ifAddress;
                             }
-                        }
+                            for (InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
+                                if ((ifAddress.getAddress().isLoopbackAddress()) && (ifAddress.getAddress() instanceof Inet4Address)) {
+                                    // Choose loopback interface during automatic interface lookup for Junior league - whole simulation will be executed on single PC
+                                    networkInterface = nif;
+                                    localAddress = ifAddress;
+                                } 
+                            }
+                        } else {
+                            if (!nif.isUp()) {
+                                continue;
+                            }
+                            for (InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
+                                if (ifAddress.getAddress().isLoopbackAddress()) {
+                                    // ignore loopback during automatic interface lookup
+                                    continue;
+                                } else if (ifAddress.getAddress() instanceof Inet4Address) {
+                                    networkInterface = nif;
+                                    localAddress = ifAddress;
+                                }                         
+                            }                            
+                        }                           
+
+                    }
+                    if(networkInterface == null) {
+                        System.err.printf("Cannot find suitable non-loopback network interface. Use --useloopback to run in single PC mode%n", interfaceName);
+                        Log.error("fatal: " + String.format("Cannot find suitable non-loopback network interface. Use --useloopback to run in single PC mode", interfaceName));
+                        System.exit(-1);                        
                     }
                 } else {
                     System.err.printf("The specified interface \"%s\" is not available%n", interfaceName);
