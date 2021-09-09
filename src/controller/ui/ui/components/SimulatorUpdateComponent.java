@@ -84,6 +84,9 @@ public class SimulatorUpdateComponent extends AbstractComponent{
                     actionRejected(values[0]);
                     break;
                 }
+                //It's important to set kickOffTeam too, automatic kickoff side change between half will not work otherwise
+                data.kickOffTeam = (side==0 ? data.team[1].teamNumber : data.team[0].teamNumber); 
+                
                 if(ActionBoard.kickOff[side].isLegal(data)) {
                     ActionBoard.kickOff[side].perform(data);
                     actionAccepted(values[0]);

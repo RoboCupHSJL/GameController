@@ -224,7 +224,7 @@ public class GameControllerSimulator {
                     while (nifs.hasMoreElements()) {
                         NetworkInterface nif = nifs.nextElement();
                         if (use_loopback) {
-                            if (!nif.isUp()) {
+                            if (!nif.isUp() || !nif.isLoopback()) {
                                 continue;
                             }
                             for (InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
@@ -235,7 +235,7 @@ public class GameControllerSimulator {
                                 } 
                             }
                         } else {
-                            if (!nif.isUp()) {
+                            if (!nif.isUp() || nif.isLoopback()) {
                                 continue;
                             }
                             for (InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
